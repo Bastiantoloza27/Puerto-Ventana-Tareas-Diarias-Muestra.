@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet"><style>body{margin:0;background:#edf2f1;font-family:'IBM Plex Sans',sans-serif;color:#1c2526}a{color:#007f80}a:hover{color:#005f60}button,input,textarea{font-family:inherit}</style></helmet>
+<div style="min-height:100vh;display:flex;flex-wrap:wrap;align-items:stretch">
+
+<div style="flex:0 0 232px;background:#0e2a2b;color:#e6efee;padding:24px 16px;display:flex;flex-direction:column;gap:4px;box-sizing:border-box;position:sticky;top:0;height:100vh;overflow:auto">
+<div style="display:flex;flex-direction:column;gap:12px;padding:0 8px 22px;margin-bottom:10px;border-bottom:1px solid #1f4344"><img src="assets/pvsa-logo.png" alt="PVSA Puerto Ventanas S.A." style="height:42px;width:auto;align-self:flex-start"><div style="font-size:13px;line-height:1.3"><div style="font-weight:600;color:#fff">Programa APR</div><div style="color:#8fb0af;font-size:12px">Actividades prevencionistas por turno</div></div></div>
+<div style="font:500 10px 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#6f9493;padding:6px 10px 4px">TURNO</div>
+<sc-for list="{{ navTurno }}" as="n" hint-placeholder-count="2"><button onClick="{{ n.go }}" style="display:flex;justify-content:space-between;align-items:center;text-align:left;padding:9px 10px;border:0;border-radius:6px;background:{{ n.bg }};color:{{ n.color }};font-size:14px;font-weight:500;cursor:pointer"><span>{{ n.label }}</span><span style="font:500 11px 'IBM Plex Mono',monospace;color:#7fd6d6">{{ n.badge }}</span></button></sc-for>
+<div style="font:500 10px 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#6f9493;padding:14px 10px 4px">PLANIFICACIÓN</div>
+<sc-for list="{{ navPlan }}" as="n" hint-placeholder-count="1"><button onClick="{{ n.go }}" style="display:flex;justify-content:space-between;align-items:center;text-align:left;padding:9px 10px;border:0;border-radius:6px;background:{{ n.bg }};color:{{ n.color }};font-size:14px;font-weight:500;cursor:pointer"><span>{{ n.label }}</span><span style="font:500 11px 'IBM Plex Mono',monospace;padding:1px 7px;border-radius:9px;background:{{ n.badgeBg }};color:#0e2a2b">{{ n.badge }}</span></button></sc-for>
+<div style="font:500 10px 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#6f9493;padding:14px 10px 4px">TRAZABILIDAD</div>
+<sc-for list="{{ navTraz }}" as="n" hint-placeholder-count="1"><button onClick="{{ n.go }}" style="text-align:left;padding:9px 10px;border:0;border-radius:6px;background:{{ n.bg }};color:{{ n.color }};font-size:14px;font-weight:500;cursor:pointer">{{ n.label }}</button></sc-for>
+<div style="margin-top:auto;padding:14px 10px 0;border-top:1px solid #1f4344;font-size:12px;color:#8fb0af;line-height:1.4;display:flex;gap:10px;align-items:center"><span style="width:32px;height:32px;border-radius:16px;background:#1b4a4a;color:#7fd6d6;display:grid;place-items:center;font:500 12px 'IBM Plex Mono',monospace;flex:none">JP</span><span><span style="color:#e6efee;display:block">Jefatura de Prevención</span>Ve todos los turnos</span></div>
+</div>
+
+<div style="flex:1 1 640px;min-width:0;padding:28px 32px 40px;box-sizing:border-box;display:flex;flex-direction:column;gap:20px;background:linear-gradient(180deg,#dcecea 0,#edf2f1 260px)">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px">
+<div><div style="font:500 12px 'IBM Plex Mono',monospace;color:#007f80;letter-spacing:.08em">MIÉRCOLES 14·10·2026 · {{ clock }}</div><div style="font:400 34px/1.1 'Newsreader',serif;margin-top:6px">{{ viewTitle }}</div></div>
+<sc-if value="{{ showShiftBar }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ shiftPills }}" as="p" hint-placeholder-count="3">
+<button onClick="{{ p.pick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:9px 14px;border-radius:10px;border:{{ p.border }};background:{{ p.bg }};color:{{ p.color }};cursor:pointer;min-width:176px;box-shadow:0 1px 2px rgba(14,42,43,.06)"><span style="display:flex;align-items:baseline;gap:8px;white-space:nowrap"><span style="font-size:14px;font-weight:600">{{ p.name }}</span><span style="font:400 12px 'IBM Plex Mono',monospace;opacity:.75">{{ p.hours }}</span></span><span style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="width:7px;height:7px;border-radius:4px;background:{{ p.dot }}"></span>{{ p.status }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{ isTurno }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ notPublished }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:40px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center"><div style="font:400 24px 'Newsreader',serif">La programación del {{ shiftName }} aún no se publica</div><div style="font-size:14px;color:#6b7778;max-width:460px">Operaciones cambia cada día. Cuando llegue el correo con la programación del turno, la Jefatura la revisa y la publica para el asesor.</div><button onClick="{{ goProg }}" style="padding:10px 18px;border-radius:6px;border:0;background:#007f80;color:#fff;font-size:14px;cursor:pointer">Ir a programar</button></div>
+</sc-if>
+<sc-if value="{{ published }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;font-size:14px;line-height:1.5;color:#3c4849"><span>Asesor de turno <b style="color:#1c2526">{{ asesor }}</b> · programación publicada a las {{ pubAt }}</span><span style="font-size:13px;color:#6b7778">Actividades sugeridas: no ejecutar una no es una falta, pero hay que indicar por qué.</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+<div style="background:{{ k.bg }};color:{{ k.color }};border:1px solid {{ k.border }};border-top:3px solid {{ k.accent }};border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.05)"><span style="font-size:12px;opacity:.75">{{ k.label }}</span><span style="font:500 28px 'IBM Plex Mono',monospace">{{ k.value }}</span><span style="font-size:12px;opacity:.75">{{ k.note }}</span></div>
+</sc-for>
+</div>
+<sc-if value="{{ isClosed }}" hint-placeholder-val="{{ false }}"><div style="background:#0e2a2b;color:#e6efee;border-radius:10px;padding:14px 18px;font-size:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>✓ Turno cerrado a las {{ closedAt }} · reporte enviado por correo</span><button onClick="{{ goCierre }}" style="border:0;background:none;color:#7fd6d6;font-size:14px;cursor:pointer;padding:0">Ver reporte →</button></div></sc-if>
+
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+<div style="flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:22px">
+<sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="display:flex;align-items:baseline;gap:8px"><span style="font-size:16px;font-weight:600">{{ g.title }}</span><span style="font:500 13px 'IBM Plex Mono',monospace;color:#6b7778">{{ g.count }}</span></span><span style="font-size:13px;color:#6b7778">{{ g.sub }}</span></div>
+<sc-for list="{{ g.items }}" as="a" hint-placeholder-count="3">
+<div style="background:#fff;border:1px solid #dde5e4;border-left:4px solid {{ a.edge }};border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:5px;min-width:0;flex:1 1 320px">
+<div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#eef3f3;color:#3c4849">{{ a.area }}</span><span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#e2f4f4;color:#005f60">{{ a.sitio }}</span></div>
+<div style="font-size:15px;font-weight:600">{{ a.proceso }}</div>
+<div style="font-size:13px;color:#3c4849;line-height:1.45;text-wrap:pretty">{{ a.desc }}</div>
+</div>
+<span style="font-size:12px;padding:4px 10px;border-radius:12px;background:{{ a.chipBg }};color:{{ a.chipColor }};white-space:nowrap">{{ a.chip }}</span>
+</div>
+<sc-if value="{{ a.editable }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ a.setOk }}" style="padding:8px 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid #007f80;background:{{ a.okBg }};color:{{ a.okColor }}">✓ Ejecutado</button>
+<button onClick="{{ a.setNo }}" style="padding:8px 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid #b9574a;background:{{ a.noBg }};color:{{ a.noColor }}">✕ No ejecutado</button>
+<sc-if value="{{ a.isCont }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.setNa }}" style="padding:8px 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid #9aa5a6;background:{{ a.naBg }};color:{{ a.naColor }}">No ocurrió</button></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ a.isOk }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:8px;background:#f4faf9">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<sc-if value="{{ a.editable }}" hint-placeholder-val="{{ true }}"><label style="padding:7px 12px;border-radius:6px;border:1px dashed #7fb8b8;background:#fff;font-size:13px;color:#005f60;cursor:pointer">📎 Adjuntar evidencia<input type="file" multiple="multiple" accept="image/*,.pdf" onChange="{{ a.onFiles }}" style="display:none"></label></sc-if>
+<sc-for list="{{ a.ev }}" as="f" hint-placeholder-count="0">
+<sc-if value="{{ f.isImg }}" hint-placeholder-val="{{ false }}"><div title="{{ f.name }}" style="width:44px;height:44px;border-radius:6px;border:1px solid #cfe5e3;background-size:cover;background-position:center;background-image:{{ f.bg }}"></div></sc-if>
+<sc-if value="{{ f.isDoc }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;padding:5px 9px;border-radius:6px;background:#fff;border:1px solid #cfe5e3">📄 {{ f.name }}</span></sc-if>
+</sc-for>
+<span style="font-size:12px;color:#9b3b2e">{{ a.evWarn }}</span>
+</div>
+<textarea value="{{ a.obs }}" onChange="{{ a.setObs }}" readOnly="{{ a.readOnly }}" rows="2" placeholder="Observaciones (opcional): qué se verificó, hallazgos, personas contactadas" style="padding:9px 10px;border:1px solid #cfe5e3;border-radius:6px;font-size:14px;resize:vertical;background:#fff"></textarea>
+</div>
+</sc-if>
+<sc-if value="{{ a.isNo }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:8px;background:#fbf4f2">
+<div style="font-size:12px;color:#7a3a30">¿Por qué no se ejecutó?</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ a.motivos }}" as="m" hint-placeholder-count="5"><button onClick="{{ m.pick }}" style="padding:5px 11px;border-radius:14px;font-size:13px;cursor:pointer;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.color }}">{{ m.label }}</button></sc-for></div>
+<textarea value="{{ a.obs }}" onChange="{{ a.setObs }}" readOnly="{{ a.readOnly }}" rows="2" placeholder="Detalle (opcional)" style="padding:9px 10px;border:1px solid #ecd3ce;border-radius:6px;font-size:14px;resize:vertical;background:#fff"></textarea>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+
+<div style="flex:1 1 280px;max-width:360px;display:flex;flex-direction:column;gap:16px;position:sticky;top:20px">
+<div style="background:#0e2a2b;color:#e6efee;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px">
+<div style="font:400 20px 'Newsreader',serif">Cierre del turno</div>
+<div style="height:8px;background:#1f4344;border-radius:4px"><div style="width:{{ regPct }};height:8px;background:#00abac;border-radius:4px"></div></div>
+<div style="font-size:13px;color:#a9c1c0">{{ regText }}</div>
+<button onClick="{{ goCierre }}" style="padding:10px 14px;border-radius:6px;border:0;background:#00abac;color:#0e2a2b;font-size:14px;font-weight:600;cursor:pointer">Novedades y cierre →</button>
+</div>
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+<div><div style="font-weight:600;font-size:15px">Actividades mínimas del mes</div><div style="font-size:12px;color:#6b7778">Programa personalizado · {{ asesor }}</div></div>
+<sc-for list="{{ mins }}" as="m" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="display:flex;justify-content:space-between;gap:8px;font-size:13px"><span>{{ m.label }}</span><span style="font-family:'IBM Plex Mono',monospace">{{ m.value }}</span></div>
+<div style="display:flex;gap:8px;align-items:center"><div style="flex:1;height:5px;background:#e3e7e7;border-radius:3px"><div style="width:{{ m.w }};height:5px;background:{{ m.color }};border-radius:3px"></div></div><button onClick="{{ m.add }}" style="padding:2px 8px;border-radius:5px;border:1px solid #cdd4d4;background:#fff;font-size:12px;cursor:pointer">+1</button></div>
+<span style="font-size:11px;color:#6b7778">Verificador: {{ m.ver }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ isCierre }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+<div style="flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><span style="display:flex;align-items:baseline;gap:8px"><span style="font-size:16px;font-weight:600">Novedades del turno</span><span style="font:500 13px 'IBM Plex Mono',monospace;color:#6b7778">{{ novCount }}</span></span><span style="font-size:13px;color:#6b7778">Lugar · novedad · quién estuvo en ese lugar</span></div>
+<sc-for list="{{ novRows }}" as="n" hint-placeholder-count="1">
+<div style="background:#fff;border:1px solid #dde5e4;border-left:4px solid {{ n.critColor }};border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span style="font-weight:600;font-size:15px">{{ n.lugar }}</span><span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#eef3f3">{{ n.tipo }}</span><span style="font-size:11px;padding:2px 8px;border-radius:10px;background:{{ n.critBg }};color:{{ n.critColor }}">{{ n.crit }}</span></div><span style="font:400 12px 'IBM Plex Mono',monospace;color:#6b7778">{{ n.t }}</span></div>
+<div style="font-size:14px;line-height:1.5">{{ n.text }}</div>
+<div style="display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:13px"><span style="color:#6b7778">Quién estuvo</span><span>{{ n.quien }}</span><span style="color:#6b7778">Acción inmediata</span><span>{{ n.accion }}</span><span style="color:#6b7778">Evidencia</span><span>{{ n.evText }}</span></div>
+</div>
+</sc-for>
+
+<sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}">
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:18px;display:flex;flex-direction:column;gap:14px">
+<div style="font:400 20px 'Newsreader',serif">Registrar novedad</div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:#6b7778">1 · Lugar</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ lugares }}" as="l" hint-placeholder-count="8"><button onClick="{{ l.pick }}" style="padding:6px 12px;border-radius:14px;font-size:13px;cursor:pointer;border:1px solid {{ l.border }};background:{{ l.bg }};color:{{ l.color }}">{{ l.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:8px;background:#f4faf9">
+<span style="font-size:12px;color:#6b7778">2 · Quién estuvo en {{ nf.lugar }} durante el turno <span style="color:#005f60">· según la nombrada</span></span>
+<div style="font-size:13px;color:#3c4849">{{ nomInfo }}</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ quienChips }}" as="q" hint-placeholder-count="4"><button onClick="{{ q.pick }}" style="padding:5px 11px;border-radius:14px;font-size:13px;cursor:pointer;border:1px solid {{ q.border }};background:{{ q.bg }};color:{{ q.color }};font-family:'IBM Plex Mono',monospace">{{ q.label }}</button></sc-for></div>
+<input value="{{ nf.otro }}" onChange="{{ setOtro }}" placeholder="Otra persona o empresa (ej. contratista Ingesur, 2 personas)" style="padding:8px 10px;border:1px solid #cfe5e3;border-radius:6px;font-size:13px;background:#fff">
+</div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:#6b7778">3 · Tipo y criticidad</span>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ tipos }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.pick }}" style="padding:6px 12px;border-radius:14px;font-size:13px;cursor:pointer;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</button></sc-for></div>
+<div style="display:flex;border:1px solid #cdd4d4;border-radius:6px;overflow:hidden;align-self:flex-start;margin-top:4px"><sc-for list="{{ crits }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.pick }}" style="padding:7px 16px;border:0;font-size:13px;cursor:pointer;background:{{ c.bg }};color:{{ c.color }}">{{ c.label }}</button></sc-for></div>
+</div>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#6b7778">4 · Novedad<textarea value="{{ nf.text }}" onChange="{{ setNovText }}" rows="3" placeholder="Qué pasó o qué se observó" style="padding:9px 10px;border:1px solid #cdd4d4;border-radius:6px;font-size:14px;resize:vertical;color:#1c2526"></textarea></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#6b7778">Acción inmediata (opcional)<input value="{{ nf.accion }}" onChange="{{ setAccion }}" placeholder="Ej.: se detuvo la faena y se informó a mantención (OT 4471)" style="padding:9px 10px;border:1px solid #cdd4d4;border-radius:6px;font-size:14px;color:#1c2526"></label>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;align-items:center"><label style="padding:7px 12px;border-radius:6px;border:1px dashed #9aa5a6;background:#fff;font-size:13px;cursor:pointer">📷 Foto o archivo<input type="file" multiple="multiple" accept="image/*,.pdf" onChange="{{ onNovFiles }}" style="display:none"></label><span style="font-size:12px;color:#6b7778">{{ nfEvText }}</span></div>
+<div style="display:flex;gap:10px;align-items:center"><span style="font-size:13px;color:#9b3b2e">{{ nfErr }}</span><button onClick="{{ addNov }}" style="padding:10px 16px;border-radius:6px;border:0;background:#007f80;color:#fff;font-size:14px;cursor:pointer">Registrar novedad</button></div>
+</div>
+</div>
+</sc-if>
+</div>
+
+<div style="flex:1 1 300px;max-width:380px;display:flex;flex-direction:column;gap:16px">
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:18px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:400 20px 'Newsreader',serif">Resumen del turno</span><span style="font:500 22px 'IBM Plex Mono',monospace;color:#005f60">{{ pctText }}</span></div>
+<div style="display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-size:14px"><span>Programadas</span><span style="font-family:'IBM Plex Mono',monospace">{{ k.prog }}</span><span>Ejecutadas</span><span style="font-family:'IBM Plex Mono',monospace;color:#005f60">{{ k.ok }}</span><span>No ejecutadas</span><span style="font-family:'IBM Plex Mono',monospace;color:#9b3b2e">{{ k.no }}</span><span>No ocurrió</span><span style="font-family:'IBM Plex Mono',monospace;color:#6b7778">{{ k.na }}</span><span>Por registrar</span><span style="font-family:'IBM Plex Mono',monospace;color:#7a5d0e">{{ k.pend }}</span><span>Novedades</span><span style="font-family:'IBM Plex Mono',monospace">{{ novCount }}</span></div>
+<sc-if value="{{ hasPend }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fbf6e6;border-radius:8px;padding:10px 12px;font-size:13px;display:flex;flex-direction:column;gap:4px"><b style="color:#7a5d0e">Falta registrar</b><sc-for list="{{ pendList }}" as="p" hint-placeholder-count="2"><span>· {{ p }}</span></sc-for><button onClick="{{ goTurno }}" style="align-self:flex-start;border:0;background:none;color:#007f80;font-size:13px;cursor:pointer;padding:4px 0 0">Ir a Mi turno →</button></div>
+</sc-if>
+<sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#6b7778">Entrega al siguiente turno<textarea value="{{ entrega }}" onChange="{{ setEntrega }}" rows="3" placeholder="Pendientes y avisos para el asesor que recibe" style="padding:9px 10px;border:1px solid #cdd4d4;border-radius:6px;font-size:14px;resize:vertical;color:#1c2526"></textarea></label>
+<div style="font-size:12px;color:#6b7778;line-height:1.5">El reporte se enviará automáticamente a: Jefatura de Prevención, Gerencia de Operaciones y {{ nextAsesor }} (siguiente turno).</div>
+<button onClick="{{ closeShift }}" style="padding:11px 16px;border-radius:6px;border:0;background:{{ closeBg }};color:#fff;font-size:14px;font-weight:500;cursor:{{ closeCursor }}">{{ closeLabel }}</button>
+</sc-if>
+</div>
+
+<sc-if value="{{ isClosed }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);overflow:hidden">
+<div style="display:flex;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid #eef1f1"><span style="width:32px;height:32px;border-radius:16px;background:#e2f4f4;color:#005f60;display:grid;place-items:center">✉</span><div><div style="font-size:14px;font-weight:600">Reporte enviado · {{ closedAt }}</div><div style="font-size:12px;color:#6b7778">2 adjuntos · 3 destinatarios</div></div></div>
+<div style="padding:12px 16px;font-size:13px;line-height:1.55;display:flex;flex-direction:column;gap:6px">
+<div><span style="color:#6b7778">Para</span> prevencion@pvsa.cl, operaciones@pvsa.cl, {{ nextMail }}</div>
+<div><span style="color:#6b7778">Asunto</span> {{ mailSubject }}</div>
+<div style="color:#3c4849">Se adjunta la planilla del turno con el control de cumplimiento, evidencias y novedades. Entrega: {{ entregaText }}</div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 16px"><button onClick="{{ dlCsv }}" style="padding:8px 12px;border-radius:6px;border:1px solid #007f80;background:#fff;color:#005f60;font-size:13px;cursor:pointer">⬇ Planilla del turno (Excel)</button><button onClick="{{ dlPdf }}" style="padding:8px 12px;border-radius:6px;border:1px solid #007f80;background:#fff;color:#005f60;font-size:13px;cursor:pointer">⬇ Reporte (PDF)</button></div>
+</div>
+</sc-if>
+
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:16px 18px;display:flex;flex-direction:column;gap:9px">
+<div style="font-weight:600;font-size:15px">Bitácora del turno</div>
+<sc-for list="{{ logRows }}" as="e" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:44px 1fr;gap:10px;font-size:13px;line-height:1.4"><span style="font-family:'IBM Plex Mono',monospace;color:#6b7778">{{ e.t }}</span><span>{{ e.text }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isProg }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+<div style="flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px">
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:16px 18px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-weight:600;font-size:15px">Asesor de turno</span><span style="font-size:12px;padding:4px 10px;border-radius:12px;background:{{ progChipBg }};color:{{ progChipColor }}">{{ progStatus }}</span></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ asesores }}" as="a" hint-placeholder-count="8"><button onClick="{{ a.pick }}" style="padding:6px 12px;border-radius:14px;font-size:13px;cursor:pointer;border:1px solid {{ a.border }};background:{{ a.bg }};color:{{ a.color }}">{{ a.label }}</button></sc-for></div>
+</div>
+<sc-for list="{{ catAreas }}" as="ar" hint-placeholder-count="4">
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);overflow:hidden">
+<div style="display:flex;justify-content:space-between;padding:11px 16px;background:#fafbfb;border-bottom:1px solid #e3e7e7"><span style="font-weight:600;font-size:14px">{{ ar.area }}</span><span style="font:500 12px 'IBM Plex Mono',monospace;color:#6b7778">{{ ar.count }}</span></div>
+<sc-for list="{{ ar.rows }}" as="r" hint-placeholder-count="4">
+<button onClick="{{ r.toggle }}" style="display:grid;grid-template-columns:28px minmax(0,2fr) minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;padding:10px 16px;border:0;border-bottom:1px solid #eef1f1;background:{{ r.bg }};text-align:left;cursor:pointer;color:{{ r.color }};font-size:14px">
+<span style="width:18px;height:18px;border-radius:4px;border:1.5px solid {{ r.boxBorder }};background:{{ r.boxBg }};color:#fff;display:grid;place-items:center;font-size:12px">{{ r.check }}</span>
+<span>{{ r.proceso }}</span><span style="color:#6b7778;font-size:13px">{{ r.sitio }}</span>
+<span style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap"><span style="font-size:11px;padding:2px 8px;border-radius:10px;background:{{ r.tipoBg }};color:{{ r.tipoColor }}">{{ r.tipo }}</span><sc-if value="{{ r.sug }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;padding:2px 8px;border-radius:10px;background:{{ r.sugBg }};color:{{ r.sugColor }}">{{ r.sugLabel }}</span></sc-if></span>
+</button>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="flex:1 1 300px;max-width:400px;display:flex;flex-direction:column;gap:16px;position:sticky;top:20px">
+<div style="background:#0e2a2b;color:#e6efee;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font:400 20px 'Newsreader',serif">Correo de Operaciones</span><span style="font:400 11px 'IBM Plex Mono',monospace;color:#8fb0af">{{ mail.at }}</span></div>
+<div style="font-size:12px;color:#8fb0af">{{ mail.subject }}</div>
+<sc-for list="{{ mail.lines }}" as="l" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:14px 1fr;gap:8px;font-size:13px;line-height:1.4"><span style="color:{{ l.dot }}">●</span><span>{{ l.text }}<span style="display:block;font-size:12px;color:{{ l.dot }}">{{ l.sug }}</span></span></div></sc-for>
+<sc-if value="{{ mail.hasUpdate }}" hint-placeholder-val="{{ false }}"><div style="background:#3a3216;border:1px solid #6b5a22;border-radius:8px;padding:10px 12px;font-size:13px;color:#f0dc9e;line-height:1.45">Actualización {{ mail.updAt }}: {{ mail.upd }}</div></sc-if>
+<button onClick="{{ applySug }}" style="padding:10px 14px;border-radius:6px;border:0;background:{{ applyBg }};color:#0e2a2b;font-size:14px;font-weight:600;cursor:pointer">{{ applyLabel }}</button>
+<label style="font-size:12px;color:#7fd6d6;cursor:pointer">o importar desde planilla Excel<input type="file" accept=".xlsx,.xls,.csv" onChange="{{ onImport }}" style="display:none"></label>
+</div>
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:16px 18px;display:flex;flex-direction:column;gap:10px">
+<div style="display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-size:14px"><span>Transversales</span><span style="font-family:'IBM Plex Mono',monospace">{{ pc.t }}</span><span>Según operación</span><span style="font-family:'IBM Plex Mono',monospace">{{ pc.o }}</span><span>Según ocurrencia</span><span style="font-family:'IBM Plex Mono',monospace">{{ pc.c }}</span><span style="font-weight:600">Total programadas</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ pc.all }}</span></div>
+<span style="font-size:13px;color:#9b3b2e">{{ pubErr }}</span>
+<button onClick="{{ publish }}" style="padding:11px 16px;border-radius:6px;border:0;background:#007f80;color:#fff;font-size:14px;font-weight:500;cursor:pointer">{{ publishLabel }}</button>
+<div style="font-size:12px;color:#6b7778;line-height:1.5">Al publicar, el asesor recibe la programación en su turno. Si se publica de nuevo durante el turno, los cambios quedan en la bitácora.</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRep }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
+<sc-for list="{{ repKpis }}" as="k" hint-placeholder-count="4"><div style="background:#fff;border:1px solid #dde5e4;border-top:3px solid #00abac;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.05)"><span style="font-size:12px;color:#6b7778">{{ k.label }}</span><span style="font:500 26px 'IBM Plex Mono',monospace">{{ k.value }}</span><span style="font-size:12px;color:#6b7778">{{ k.note }}</span></div></sc-for>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:stretch">
+<div style="flex:1 1 320px;background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:16px 18px;display:flex;flex-direction:column;gap:10px"><div style="font-weight:600;font-size:15px">Por qué no se ejecutan</div>
+<sc-for list="{{ motivoBars }}" as="m" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:170px minmax(0,1fr) 30px;gap:10px;align-items:center;font-size:13px"><span>{{ m.label }}</span><div style="height:6px;background:#e3e7e7;border-radius:3px"><div style="width:{{ m.w }};height:6px;background:#c49a1c;border-radius:3px"></div></div><span style="font-family:'IBM Plex Mono',monospace;text-align:right">{{ m.n }}</span></div></sc-for>
+</div>
+<div style="flex:1 1 320px;background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);padding:16px 18px;display:flex;flex-direction:column;gap:10px"><div style="font-weight:600;font-size:15px">Cumplimiento por asesor</div>
+<sc-for list="{{ asesorBars }}" as="m" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:170px minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:13px"><span>{{ m.label }}</span><div style="height:6px;background:#e3e7e7;border-radius:3px"><div style="width:{{ m.w }};height:6px;background:#007f80;border-radius:3px"></div></div><span style="font-family:'IBM Plex Mono',monospace;text-align:right">{{ m.v }}</span></div></sc-for>
+</div>
+</div>
+<div style="background:#fff;border:1px solid #dde5e4;border-radius:10px;box-shadow:0 1px 2px rgba(14,42,43,.05),0 6px 18px rgba(14,42,43,.04);overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #e3e7e7;flex-wrap:wrap;gap:8px"><span style="font-weight:600;font-size:15px">Turnos cerrados</span><button onClick="{{ dlAll }}" style="padding:7px 12px;border-radius:6px;border:1px solid #007f80;background:#fff;color:#005f60;font-size:13px;cursor:pointer">⬇ Consolidado del mes (Excel)</button></div>
+<div style="display:grid;grid-template-columns:70px 80px minmax(0,1.4fr) 90px 80px 90px 150px;gap:8px;padding:9px 16px;font-size:12px;color:#6b7778;border-bottom:1px solid #eef1f1"><span>Fecha</span><span>Turno</span><span>Asesor</span><span style="text-align:right">Cumplim.</span><span style="text-align:right">Novedades</span><span>Enviado</span><span></span></div>
+<sc-for list="{{ repRows }}" as="r" hint-placeholder-count="8">
+<div style="display:grid;grid-template-columns:70px 80px minmax(0,1.4fr) 90px 80px 90px 150px;gap:8px;padding:10px 16px;font-size:14px;border-bottom:1px solid #eef1f1;align-items:center;background:{{ r.bg }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ r.fecha }}</span><span>{{ r.turno }}</span><span style="color:#3c4849">{{ r.asesor }}</span><span style="text-align:right;font-family:'IBM Plex Mono',monospace;color:{{ r.pctColor }}">{{ r.pct }}</span><span style="text-align:right;font-family:'IBM Plex Mono',monospace">{{ r.novs }}</span><span style="font-size:13px;color:#005f60">{{ r.at }}</span><span style="display:flex;gap:6px;justify-content:flex-end"><button onClick="{{ r.csv }}" style="padding:4px 8px;border-radius:5px;border:1px solid #cdd4d4;background:#fff;font-size:12px;cursor:pointer">Excel</button><button onClick="{{ r.pdf }}" style="padding:4px 8px;border-radius:5px;border:1px solid #cdd4d4;background:#fff;font-size:12px;cursor:pointer">PDF</button></span></div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;exigirEvidencia&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const SH={T1:{name:'1° turno',hours:'08:00–15:30',short:'1er'},T2:{name:'2° turno',hours:'15:30–23:00',short:'2do'},T3:{name:'3° turno',hours:'23:00–08:00',short:'3er'}};
+const ASES=['Arenas Binett Joel','Bernal Mena Miguel','Burgos Godoy Andrés','Burgos Godoy Ariel','Campos Torres Rodrigo','González Romero Mario','Maulen Vicencio Benjamín','Velazquez Acuña Cesar'];
+const V=(p,s)=>`Verificar en terreno las actividades asociadas a ${p.toLowerCase()} en ${s}, evaluando el cumplimiento de los procedimientos de trabajo, controles críticos y condiciones de seguridad.`;
+const RAW=[
+['Prevención de Riesgos','PVSA','Charla de inicio de jornada','t','Participar de forma aleatoria y alternada en las charlas de inicio de jornada (charlas de 5 minutos) de los distintos terminales.'],
+['Prevención de Riesgos','Gestión Preventiva','Recorridos preventivos','t','Realizar recorridos preventivos por las instalaciones de PVSA para verificar en terreno las condiciones de seguridad de los distintos procesos.'],
+['Prevención de Riesgos','Capacitación','Programa de entrenamiento y capacitación','t','Gestionar y ejecutar las capacitaciones programadas del mes, según la disponibilidad operacional del personal.'],
+['Prevención de Riesgos','Capacitación','Capacitación operacional','t','Verificar las condiciones básicas de seguridad en las actividades de capacitación y entrenamiento operacional.'],
+['Prevención de Riesgos','Gestión Preventiva','Programa personalizado de prevención','t','Gestionar y ejecutar, según la disponibilidad del turno, las actividades definidas en el Programa Personalizado de Prevención de Riesgos.'],
+['Prevención de Riesgos','Emergencias','Emergencias','c','Concurrir de forma inmediata e impostergable a toda emergencia que se produzca durante el turno en las instalaciones de PVSA.'],
+['Prevención de Riesgos','Gestión Preventiva','Eventos meteorológicos','c','Realizar verificaciones preventivas durante eventos meteorológicos, evaluando las condiciones de las instalaciones y procesos.'],
+['Operaciones','Control Tránsito','Control de tránsito','t','Verificar en terreno las actividades del personal asignado a Control de Tránsito, evaluando el cumplimiento de los procedimientos.'],
+['Operaciones','Operador Equipos','Operador de equipos y maquinaria pesada','t','Verificar en terreno las actividades de los operadores de maquinaria pesada durante el turno.'],
+['Operaciones','Materialero/Pañolero','Materialero pañolero','t','Verificar en terreno las actividades del personal asignado como materialero y pañolero de operaciones.'],
+['Operaciones','Trabajos generales','Trabajos generales','o'],
+['Operaciones','Sitio 2','Descarga de asfalto','o'],['Operaciones','Sitio 2','Embarque de concentrado de cobre','o'],
+['Operaciones','Sitio 3','Descarga de acero (fierro, bobinas, palanquillas)','o'],['Operaciones','Sitio 3','Descarga de asfalto','o'],['Operaciones','Sitio 3','Descarga de ceniza de soda','o'],['Operaciones','Sitio 3','Descarga de combustible','o'],['Operaciones','Sitio 3','Embarque de concentrado de cobre','o'],['Operaciones','Sitio 3','Embarque de petcoke','o'],
+['Operaciones','Sitio 5','Descarga de carbón','o'],['Operaciones','Sitio 5','Descarga de acero (fierro, bobinas, palanquillas)','o'],['Operaciones','Sitio 5','Descarga de cemento en bigbag','o'],['Operaciones','Sitio 5','Descarga de clinker','o'],['Operaciones','Sitio 5','Descarga de combustible','o'],['Operaciones','Sitio 5','Descarga de granos','o'],['Operaciones','Sitio 5','Embarque de palanquillas','o'],
+['Operaciones','Terminal de Granos','Recepción, acopio y despacho de cemento en bigbag','o'],
+['Operaciones','Centro de Acopio Terquim','Recepción, descarga y despacho de acero','o'],
+['Mantención','PVSA','Procesos electromecánicos','t','Verificar en terreno las actividades programadas para la jornada por el equipo de electromecánicos.'],
+['Mantención','PVSA','Procesos de mantenimiento','t','Verificar en terreno las actividades de mantenimiento programadas para la jornada.'],
+['Terminal Costa','Terminal Costa','Recepción / embarque de concentrado de cobre','o'],
+['Terminal Granos','Terminal de Granos','Recepción / despacho de granos','o'],
+['Terminal Multicarga','Terminal Multicarga','Recepción / despacho de petcoke y ceniza de soda','o']];
+const CAT=RAW.map((r,i)=>({id:'a'+i,area:r[0],sitio:r[1],proceso:r[2],tipo:r[3],desc:r[4]||V(r[2],r[1])}));
+const find=(p,s)=>CAT.find(c=>c.proceso.startsWith(p)&&(!s||c.sitio===s)).id;
+const BASE=['Charla de inicio','Programa de entrenamiento','Programa personalizado','Emergencias','Control de tránsito','Operador de equipos','Materialero','Procesos electromecánicos','Procesos de mantenimiento'].map(p=>find(p));
+const OPS1=[['Sitio 5 · MV Chang Hang Jin Hai · descarga de cemento big-bags',find('Descarga de cemento','Sitio 5')],['Sitio 3 · MV Jasmine K · descarga de ceniza de soda',find('Descarga de ceniza','Sitio 3')],['TGL · recepción y acopio de cemento bigbag',find('Recepción, acopio','Terminal de Granos')],['Terquim · despacho de acero y recepción de palanquilla',find('Recepción, descarga','Centro de Acopio Terquim')],['Terminal Costa · recepción de concentrado en camiones',find('Recepción / embarque','Terminal Costa')],['Terminal Granos · despacho de granos',find('Recepción / despacho de granos')],['Terminal Multicarga · despacho de petcoke',find('Recepción / despacho de petcoke')],['Sitio 2 · sin nave programada',null]];
+const S2=find('Embarque de concentrado','Sitio 2');
+const MAILS={T1:{at:'06:40',subject:'Programación de Operaciones · 1er turno · 14-10',ops:OPS1},T2:{at:'06:40',subject:'Programación de Operaciones · 2do turno · 14-10',ops:OPS1,upd:{at:'13:10',text:'atraca MV Andes Star en Sitio 2 a las 17:30 · inicia embarque de concentrado de cobre.',id:S2}},
+  T3:{at:'14:05',subject:'Programación de Operaciones · 3er turno · 14-10',ops:[['Sitio 5 · MV Chang Hang Jin Hai · continúa descarga de cemento',find('Descarga de cemento','Sitio 5')],['Sitio 2 · MV Andes Star · continúa embarque de concentrado',S2],['Terminales · sin operación nocturna',null]]}};
+const sugFor=sh=>{const m=MAILS[sh];const s=new Set(BASE);m.ops.forEach(o=>o[1]&&s.add(o[1]));if(m.upd)s.add(m.upd.id);return s};
+const T1IDS=Object.fromEntries([...BASE,...OPS1.map(o=>o[1]).filter(Boolean)].map(i=>[i,true]));
+const NOMB={'Sitio 5':{f:'Descarga cemento big-bags · MV Chang Hang Jin Hai',jefe:'Jefe nave 349',n:{T1:41,T2:39,T3:22},c:['1347','1062','1178','1404','1225']},'Sitio 3':{f:'Ceniza soda · MV Jasmine K',jefe:'Jefe nave 412',n:{T1:16,T2:16,T3:0},c:['1290','1331','1412','1187']},
+ 'Terminal de Granos':{f:'Recepción cemento · TGL',jefe:'Sup. stacking 675',n:{T1:32,T2:30,T3:0},c:['1215','1108','1256','1093']},'Centro de Acopio Terquim':{f:'Despacho acero + palanquilla',jefe:'Sup. stacking 702',n:{T1:19,T2:18,T3:0},c:['1140','1371','1066']},
+ 'Control Tránsito':{f:'Equipo control de tránsito',jefe:'Supervisor 518',n:{T1:8,T2:8,T3:4},c:['1502','1519','1488']},'Sitio 2':{f:'Embarque concentrado · MV Andes Star (desde 17:30)',jefe:'Jefe nave 377',n:{T1:0,T2:24,T3:24},c:['1601','1618','1633']}};
+const LUG=['Sitio 2','Sitio 3','Sitio 5','Terminal Costa','Terminal de Granos','Terminal Multicarga','Centro de Acopio Terquim','Control Tránsito','Muelle','Mantención','Servicios Generales'];
+const TIPOS=['Condición insegura','Acto inseguro','Incidente / cuasi accidente','Operacional','Medioambiente','Aviso al siguiente turno'];
+const MOT=['Sin operación en el turno','Atención de emergencia','Prioricé otra actividad','Condición climática','Sin acceso o permiso','Otro'];
+const CRIT={Baja:['#e9f1f0','#3c6e6c'],Media:['#fbf3dc','#8a6a12'],Alta:['#f6e4e0','#9b3b2e']};
+const now=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+function rnd(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const PAST=(()=>{const r=rnd(1410),o=[];for(let d=13;d>=1;d--)['T2','T1'].concat(r()<0.5?['T3']:[]).forEach(sh=>{const prog=14+Math.floor(r()*5),na=r()<0.8?1:0,no=Math.floor(r()*4),ok=prog-na-no;
+  const mot={};for(let i=0;i<no;i++){const m=MOT[Math.floor(r()*r()*MOT.length)];mot[m]=(mot[m]||0)+1}
+  o.push({fecha:String(d).padStart(2,'0')+'-10',sh,asesor:ASES[Math.floor(r()*ASES.length)],prog,ok,no,na,pct:Math.round(ok/(prog-na)*100),novs:Math.floor(r()*4),at:(sh==='T1'?'15:4':sh==='T2'?'23:1':'08:1')+Math.floor(r()*9),mot})});return o})();
+const t=(h)=>h;
+const ex=(st,mot,obs,tm)=>({st,mot:mot||null,obs:obs||'',ev:[],t:tm});
+
+class Component extends DCLogic {
+  state={view:'turno',shift:'T1',
+    prog:{T1:{ids:T1IDS,asesor:'Bernal Mena Miguel',pub:'07:45',applied:true},T2:{ids:{...T1IDS},asesor:'Burgos Godoy Andrés',pub:'07:50',applied:false},T3:{ids:{},asesor:null,pub:null,applied:false}},
+    exec:{T1:{[find('Charla de inicio')]:ex('ok',null,'Charla en Terminal Granos · 22 asistentes','08:12'),[find('Descarga de ceniza','Sitio 3')]:ex('ok',null,'','09:05'),[find('Descarga de cemento','Sitio 5')]:ex('ok',null,'Se verificó segregación bajo carga suspendida','09:40'),
+      [find('Recepción, acopio','Terminal de Granos')]:ex('ok',null,'','10:15'),[find('Recepción, descarga','Centro de Acopio Terquim')]:ex('no','Prioricé otra actividad','Se atendió la condición de Sitio 5','11:02'),[find('Operador de equipos')]:ex('ok',null,'','11:30'),
+      [find('Control de tránsito')]:ex('ok',null,'','12:05'),[find('Procesos electromecánicos')]:ex('ok',null,'','12:40'),[find('Recepción / embarque','Terminal Costa')]:ex('no','Sin operación en el turno','No llegaron camiones','13:00'),[find('Recepción / despacho de petcoke')]:ex('ok',null,'','13:35')},T2:{},T3:{}},
+    novs:{T1:[{lugar:'Sitio 5',tipo:'Condición insegura',crit:'Media',text:'Baranda de la pasarela de acceso a la bodega 2 de la nave está suelta.',quien:'Jefe nave 349, 1347, 1062 · Asesor Bernal Mena Miguel',accion:'Se señalizó y se informó a mantención (OT 4471).',ev:1,t:'09:48'}],T2:[],T3:[]},
+    nf:{lugar:'Sitio 5',tipo:null,crit:'Media',text:'',quien:{},otro:'',accion:'',ev:[]},nfErr:'',entrega:{T1:'',T2:'',T3:''},closed:{},pubErr:'',
+    mins:{'Charlas de 5 minutos':2,'Observación de conducta':1,'Inspección planeada de seguridad':3,'Inspección de EPP':2,'Reporte de cuasi-accidentes':1},
+    log:{T1:[{t:'09:48',text:'Novedad registrada en Sitio 5 · media'},{t:'07:45',text:'Programación publicada · 16 actividades'},{t:'06:40',text:'Correo de Operaciones recibido'}],T2:[{t:'13:10',text:'Actualización de Operaciones: Sitio 2 inicia embarque 17:30'},{t:'07:50',text:'Programación publicada · 16 actividades'}],T3:[{t:'14:05',text:'Correo de Operaciones del 3° turno recibido'}]}};
+  addLog(text,sh){sh=sh||this.state.shift;this.setState(s=>({log:{...s.log,[sh]:[{t:now(),text},...s.log[sh]]}}))}
+  setEx(id,patch){const sh=this.state.shift;this.setState(s=>{const cur=s.exec[sh][id]||{st:null,mot:null,obs:'',ev:[]};return{exec:{...s.exec,[sh]:{...s.exec[sh],[id]:{...cur,...patch}}}}})}
+  progIds(sh){return CAT.filter(c=>this.state.prog[sh].ids[c.id]).map(c=>c.id)}
+  kpi(sh){const ids=this.progIds(sh),E=this.state.exec[sh];const req=this.props.exigirEvidencia??false;
+    const c={prog:ids.length,ok:0,no:0,na:0,pend:0,pendList:[]};ids.forEach(id=>{const e=E[id];const st=e&&e.st;const bad=!st||(st==='no'&&!e.mot)||(st==='ok'&&req&&!e.ev.length);
+      if(st==='ok')c.ok++;else if(st==='no')c.no++;else if(st==='na')c.na++;if(bad){c.pend+=st?0:1;const a=CAT.find(x=>x.id===id);c.pendList.push(a.proceso+' · '+a.sitio+(st==='no'?' (falta motivo)':st==='ok'?' (falta evidencia)':''))}});
+    c.pct=c.prog-c.na>0?Math.round(c.ok/(c.prog-c.na)*100):0;c.ready=c.pendList.length===0&&c.prog>0;return c}
+  files(e){return[...(e.target.files||[])].map(f=>{const url=URL.createObjectURL(f);return{name:f.name,url,bg:`url("${url}")`,isImg:f.type.startsWith('image/'),isDoc:!f.type.startsWith('image/')}})}
+  rowsFor(sh){const E=this.state.exec[sh];return this.progIds(sh).map((id,i)=>{const a=CAT.find(x=>x.id===id);const e=E[id]||{};return{n:i+1,...a,st:e.st,mot:e.mot,obs:e.obs||'',ev:(e.ev||[]).length}})}
+  dl(name,content,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove()}
+  csv(sh){const s=this.state,k=this.kpi(sh);const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+    const L=[['PROGRAMACIÓN DE ACTIVIDADES PREVENCIONISTA DE RIESGOS EN TURNO'],['PROGRAMADO','14-10-2026',SH[sh].name,'ASESOR DE TURNO',s.prog[sh].asesor],['ACTIVIDADES PROGRAMADAS','ACTIVIDADES EJECUTADAS','ACTIVIDADES NO EJECUTADAS','NO OCURRIÓ','PORCENTAJE DE CUMPLIMIENTO'],[k.prog,k.ok,k.no,k.na,k.pct+'%'],[],
+      ['N°','ÁREA','SITIO/SECTOR/FUNCIÓN','PROCESO','ACTIVIDAD A DESARROLLAR','EJECUTADO','NO EJECUTADO','MOTIVO','EVIDENCIA','OBSERVACIONES']];
+    this.rowsFor(sh).forEach(r=>L.push([r.n,r.area,r.sitio,r.proceso,r.desc,r.st==='ok'?1:0,r.st==='no'?1:0,r.st==='na'?'No ocurrió':(r.mot||''),r.ev?r.ev+' archivo(s)':'',r.obs]));
+    L.push([],['NOVEDADES DEL TURNO'],['HORA','LUGAR','TIPO','CRITICIDAD','NOVEDAD','QUIÉN ESTUVO','ACCIÓN INMEDIATA']);s.novs[sh].forEach(n=>L.push([n.t,n.lugar,n.tipo,n.crit,n.text,n.quien,n.accion]));
+    L.push([],['ENTREGA AL SIGUIENTE TURNO',s.entrega[sh]||'—']);
+    this.dl(`14.${sh[1]}. Programa de Actividades APR ${SH[sh].short} Turno, 14 de Octubre.csv`,'\ufeff'+L.map(r=>r.map(q).join(';')).join('\n'),'text/csv')}
+  pdf(sh){const s=this.state,k=this.kpi(sh);const R=this.rowsFor(sh);
+    const body=`<img src="${location.href.replace(/[^/]*$/,'')}assets/pvsa-logo.png" style="height:38px"><h1>Reporte de turno · ${SH[sh].name}</h1><p>Miércoles 14-10-2026 · ${SH[sh].hours} · Asesor de turno: <b>${s.prog[sh].asesor}</b></p>
+<div class="k"><div><small>Programadas</small><b>${k.prog}</b></div><div><small>Ejecutadas</small><b>${k.ok}</b></div><div><small>No ejecutadas</small><b>${k.no}</b></div><div><small>Cumplimiento</small><b>${k.pct}%</b></div></div>
+<h2>Control de cumplimiento</h2><table><tr><th>N°</th><th>Área</th><th>Sitio</th><th>Proceso</th><th>Estado</th><th>Motivo / observación</th><th>Evid.</th></tr>${R.map(r=>`<tr><td>${r.n}</td><td>${r.area}</td><td>${r.sitio}</td><td>${r.proceso}</td><td>${r.st==='ok'?'Ejecutado':r.st==='no'?'No ejecutado':r.st==='na'?'No ocurrió':'—'}</td><td>${[r.mot,r.obs].filter(Boolean).join(' · ')}</td><td>${r.ev||''}</td></tr>`).join('')}</table>
+<h2>Novedades</h2><table><tr><th>Hora</th><th>Lugar</th><th>Tipo</th><th>Crit.</th><th>Novedad</th><th>Quién estuvo</th><th>Acción</th></tr>${s.novs[sh].map(n=>`<tr><td>${n.t}</td><td>${n.lugar}</td><td>${n.tipo}</td><td>${n.crit}</td><td>${n.text}</td><td>${n.quien}</td><td>${n.accion}</td></tr>`).join('')||'<tr><td colspan="7">Sin novedades</td></tr>'}</table>
+<h2>Entrega al siguiente turno</h2><p>${s.entrega[sh]||'—'}</p><div class="sig"><div>${s.prog[sh].asesor}<br><small>Asesor de turno</small></div><div>Jefatura de Prevención</div></div>`;
+    const css='body{font:10.5pt/1.45 Arial,sans-serif;color:#1f2a2a;margin:1.5cm}h1{font:400 21pt Georgia,serif;margin:.4em 0 .1em}h2{font:600 12pt Arial;margin:1.3em 0 .4em}table{width:100%;border-collapse:collapse;font-size:9pt}td,th{border-bottom:1px solid #ccc;padding:5px 4px;text-align:left;vertical-align:top}th{color:#555}.k{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.k div{border:1px solid #ccc;padding:8px;display:flex;flex-direction:column}.k b{font-size:16pt}.sig{display:flex;gap:3cm;margin-top:2cm}.sig div{border-top:1px solid #000;padding-top:4px;min-width:6cm}';
+    const w=window.open('','_blank');if(w){w.document.title='Reporte '+SH[sh].name;const st=w.document.createElement('style');st.textContent=css;w.document.head.appendChild(st);w.document.body.innerHTML=body;setTimeout(()=>w.print(),400)}else this.dl('Reporte de turno.html','<!doctype html><meta charset="utf-8"><style>'+css+'</style>'+body,'text/html')}
+  renderVals(){
+    const s=this.state,sh=s.shift,P=s.prog[sh],E=s.exec[sh],k=this.kpi(sh),closed=s.closed[sh],req=this.props.exigirEvidencia??false;
+    const nav=v=>({bg:s.view===v?'#1b4a4a':'transparent',color:s.view===v?'#fff':'#a9c1c0'});
+    const go=v=>()=>this.setState({view:v});
+    const st3=SH;const order=['T1','T2','T3'];const nextSh=order[(order.indexOf(sh)+1)%3];const nextA=s.prog[nextSh].asesor||'asesor por asignar';
+    const shiftPills=order.map(x=>{const kk=this.kpi(x),pp=s.prog[x],cur=x===sh;const status=s.closed[x]?'Cerrado · '+kk.pct+'%':!pp.pub?'Sin programar':x==='T1'?'En curso · '+(kk.prog-kk.pend)+'/'+kk.prog:'Programado';
+      const dot=s.closed[x]?'#00abac':!pp.pub?'#c49a1c':x==='T1'?'#00abac':'#9aa5a6';
+      return{name:SH[x].name,hours:SH[x].hours,status,dot,pick:()=>this.setState({shift:x,nfErr:'',pubErr:''}),bg:cur?'#0e2a2b':'#fff',color:cur?'#e6efee':'#1c2526',border:cur?'1px solid #0e2a2b':'1px solid #dde5e4'}});
+    const chip=on=>on?{border:'#007f80',bg:'#007f80',color:'#fff'}:{border:'#cdd4d4',bg:'#fff',color:'#1c2526'};
+    const item=a=>{const e=E[a.id]||{st:null,mot:null,obs:'',ev:[]};const st=e.st;const editable=!closed;
+      const ch=st==='ok'?['Ejecutado · '+(e.t||''),'#e2f4f4','#005f60','#00abac']:st==='no'?['No ejecutado'+(e.mot?'':' · falta motivo'),'#f6e4e0','#9b3b2e','#b9574a']:st==='na'?['No ocurrió','#eef1f1','#5b6667','#b8c1c2']:['Por registrar','#fbf3dc','#7a5d0e','#e3c77a'];
+      return{...a,editable,readOnly:!editable,isCont:a.tipo==='c',chip:ch[0],chipBg:ch[1],chipColor:ch[2],edge:ch[3],
+        okBg:st==='ok'?'#007f80':'#fff',okColor:st==='ok'?'#fff':'#005f60',noBg:st==='no'?'#b9574a':'#fff',noColor:st==='no'?'#fff':'#9b3b2e',naBg:st==='na'?'#5b6667':'#fff',naColor:st==='na'?'#fff':'#5b6667',
+        setOk:()=>{this.setEx(a.id,{st:'ok',mot:null,t:now()});this.addLog(`Ejecutado: ${a.proceso} · ${a.sitio}`)},
+        setNo:()=>{this.setEx(a.id,{st:'no',t:now()});this.addLog(`No ejecutado: ${a.proceso} · ${a.sitio}`)},
+        setNa:()=>{this.setEx(a.id,{st:'na',mot:null,t:now()});this.addLog(`No ocurrió: ${a.proceso}`)},
+        isOk:st==='ok',isNo:st==='no',obs:e.obs,setObs:ev=>this.setEx(a.id,{obs:ev.target.value}),ev:e.ev,evWarn:st==='ok'&&req&&!e.ev.length?'Falta evidencia':'',
+        onFiles:ev=>{const f=this.files(ev);if(!f.length)return;this.setEx(a.id,{ev:[...e.ev,...f]});this.addLog(`Evidencia adjunta (${f.length}) · ${a.proceso}`);ev.target.value=''},
+        motivos:MOT.map(m=>({label:m,...(e.mot===m?{border:'#b9574a',bg:'#b9574a',color:'#fff'}:{border:'#e3c9c3',bg:'#fff',color:'#1c2526'}),pick:()=>{if(editable)this.setEx(a.id,{mot:m})}}))}};
+    const ids=this.progIds(sh);const items=ids.map(id=>CAT.find(c=>c.id===id));
+    const grp=(tp,title,sub)=>{const it=items.filter(a=>a.tipo===tp);return{title,sub,count:it.length,items:it.map(item)}};
+    const groups=[grp('t','Transversales','Se esperan en todos los turnos'),grp('o','Según la operación del día','Programadas desde el correo de Operaciones'),grp('c','Según ocurrencia','«No ocurrió» no afecta el cumplimiento')].filter(g=>g.count);
+    const reg=k.prog-k.pend;
+    const kpis=[{label:'Programadas',value:String(k.prog),note:'en este turno',bg:'#0e2a2b',color:'#e6efee',border:'#0e2a2b',accent:'#00abac'},{label:'Ejecutadas',value:String(k.ok),note:k.pend?`${k.pend} por registrar`:'todo registrado',bg:'#fff',color:'#1c2526',border:'#dde5e4',accent:'#00abac'},
+      {label:'No ejecutadas',value:String(k.no),note:'con motivo',bg:'#fff',color:'#1c2526',border:'#dde5e4',accent:'#b9574a'},{label:'Cumplimiento',value:k.pct+'%',note:k.na?`excluye ${k.na} «no ocurrió»`:'ejecutadas / programadas',bg:'#fff',color:'#1c2526',border:'#dde5e4',accent:'#c49a1c'}];
+    const mins=[['Charlas de 5 minutos',4,'Registro físico'],['Observación de conducta',4,'SAFEX · Módulo conductual'],['Inspección planeada de seguridad',4,'SAFEX · Módulo reportabilidad'],['Inspección de EPP',4,'SAFEX · Listas de chequeo'],['Reporte de cuasi-accidentes',null,'SAFEX · Reportabilidad · cada vez']].map(([l,m,ver])=>{const v=s.mins[l];
+      return{label:l,ver,value:m?`${v}/${m}`:`${v} este mes`,w:m?Math.min(100,v/m*100)+'%':'100%',color:m?(v>=m?'#00abac':'#007f80'):'#cdd4d4',add:()=>{this.setState(x=>({mins:{...x.mins,[l]:x.mins[l]+1}}));this.addLog(`${l}: +1 (verificador ${ver})`)}}});
+    // novedades
+    const nf=s.nf,NB=NOMB[nf.lugar],asesor=P.asesor||'—';
+    const nn=NB&&NB.n[sh];const nomInfo=NB&&nn?`${NB.f} · ${NB.jefe} · ${nn} trabajadores en la nombrada del ${SH[sh].name}`:'Sin dotación de la nombrada en este lugar para este turno. Indica a las personas abajo.';
+    const qOpts=NB&&nn?[NB.jefe,...NB.c]:[];
+    const novRows=s.novs[sh].map(n=>({...n,critBg:CRIT[n.crit][0],critColor:CRIT[n.crit][1],accion:n.accion||'—',evText:n.ev?`${n.ev} archivo(s)`:'—'}));
+    const mail=MAILS[sh],sug=sugFor(sh),cur=P.ids;
+    const diff=[...sug].filter(i=>!cur[i]).length;
+    const tipoL={t:['Transversal','#e2f4f4','#005f60'],o:['Según operación','#eef3f3','#3c4849'],c:['Según ocurrencia','#f2f0ea','#6b5a2a']};
+    const areas=[...new Set(CAT.map(c=>c.area))].map(area=>{const rows=CAT.filter(c=>c.area===area);return{area,count:rows.filter(r=>cur[r.id]).length+'/'+rows.length,rows:rows.map(r=>{const on=!!cur[r.id],sg=sug.has(r.id)&&r.tipo==='o';const isUpd=mail.upd&&mail.upd.id===r.id;
+      return{proceso:r.proceso,sitio:r.sitio,check:on?'✓':'',boxBg:on?'#007f80':'#fff',boxBorder:on?'#007f80':'#cdd4d4',bg:on?'#fff':'#fafbfb',color:on?'#1c2526':'#6b7778',tipo:tipoL[r.tipo][0],tipoBg:tipoL[r.tipo][1],tipoColor:tipoL[r.tipo][2],
+        sug:sg,sugLabel:isUpd?'Nueva · '+mail.upd.at:'Correo Operaciones',sugBg:isUpd?'#fbf3dc':'#e2f4f4',sugColor:isUpd?'#7a5d0e':'#005f60',
+        toggle:()=>this.setState(x=>({prog:{...x.prog,[sh]:{...x.prog[sh],ids:{...x.prog[sh].ids,[r.id]:!on}}}}))}})}});
+    const pcount=tp=>CAT.filter(c=>cur[c.id]&&c.tipo===tp).length;
+    const repAll=[...order.filter(x=>s.closed[x]).map(x=>{const kk=this.kpi(x);return{fecha:'14-10',sh:x,asesor:s.prog[x].asesor,pct:kk.pct,novs:s.novs[x].length,at:s.closed[x],live:true,mot:Object.fromEntries([])}}),...PAST];
+    const motAgg={};PAST.forEach(p=>Object.entries(p.mot).forEach(([m,n])=>motAgg[m]=(motAgg[m]||0)+n));order.forEach(x=>{if(s.closed[x])Object.values(s.exec[x]).forEach(e=>{if(e.st==='no'&&e.mot)motAgg[e.mot]=(motAgg[e.mot]||0)+1})});
+    const mMax=Math.max(1,...Object.values(motAgg));
+    const byA={};repAll.forEach(r=>{(byA[r.asesor]=byA[r.asesor]||[]).push(r.pct)});
+    const avg=Math.round(repAll.reduce((a,r)=>a+r.pct,0)/repAll.length);
+    return{
+      clock:now(),viewTitle:{turno:'Mi turno',cierre:'Novedades y cierre',prog:'Programación del turno',rep:'Reportes'}[s.view],showShiftBar:s.view!=='rep',shiftPills,shiftName:SH[sh].name,
+      navTurno:[{label:'Mi turno',go:go('turno'),...nav('turno'),badge:k.prog?`${reg}/${k.prog}`:''},{label:'Novedades y cierre',go:go('cierre'),...nav('cierre'),badge:String(s.novs[sh].length||'')}],
+      navPlan:[{label:'Programación',go:go('prog'),...nav('prog'),badge:order.filter(x=>!s.prog[x].pub).length?String(order.filter(x=>!s.prog[x].pub).length):'',badgeBg:order.filter(x=>!s.prog[x].pub).length?'#e3c77a':'transparent'}],
+      navTraz:[{label:'Reportes',go:go('rep'),...nav('rep')}],
+      isTurno:s.view==='turno',isCierre:s.view==='cierre',isProg:s.view==='prog',isRep:s.view==='rep',goProg:go('prog'),goCierre:go('cierre'),goTurno:go('turno'),
+      published:!!P.pub,notPublished:!P.pub,asesor,pubAt:P.pub,kpis,groups,isClosed:!!closed,closedAt:closed,
+      regPct:k.prog?Math.round(reg/k.prog*100)+'%':'0%',regText:closed?'Turno cerrado y reporte enviado.':(k.pendList.length?`${reg} de ${k.prog} registradas · faltan ${k.pendList.length} para cerrar`:'Todo registrado: puedes cerrar el turno.'),mins,
+      // cierre
+      novCount:String(s.novs[sh].length),novRows,canEdit:!closed&&!!P.pub,nf,nfErr:s.nfErr,nomInfo,
+      lugares:LUG.map(l=>({label:l,...chip(nf.lugar===l),pick:()=>this.setState(x=>({nf:{...x.nf,lugar:l,quien:{}}}))})),
+      quienChips:qOpts.map(q=>({label:q,...chip(!!nf.quien[q]),pick:()=>this.setState(x=>({nf:{...x.nf,quien:{...x.nf.quien,[q]:!x.nf.quien[q]}}}))})),
+      tipos:TIPOS.map(tp=>({label:tp,...chip(nf.tipo===tp),pick:()=>this.setState(x=>({nf:{...x.nf,tipo:tp},nfErr:''}))})),
+      crits:['Baja','Media','Alta'].map(c=>({label:c,pick:()=>this.setState(x=>({nf:{...x.nf,crit:c}})),bg:nf.crit===c?CRIT[c][1]:'#fff',color:nf.crit===c?'#fff':'#1c2526'})),
+      setOtro:e=>{const v=e.target.value;this.setState(x=>({nf:{...x.nf,otro:v}}))},setNovText:e=>{const v=e.target.value;this.setState(x=>({nf:{...x.nf,text:v},nfErr:''}))},setAccion:e=>{const v=e.target.value;this.setState(x=>({nf:{...x.nf,accion:v}}))},
+      onNovFiles:e=>{const f=this.files(e);this.setState(x=>({nf:{...x.nf,ev:[...x.nf.ev,...f]}}));e.target.value=''},nfEvText:nf.ev.length?`${nf.ev.length} archivo(s) adjunto(s)`:'',
+      addNov:()=>{if(!nf.tipo||!nf.text.trim()){this.setState({nfErr:'Falta el tipo o la descripción.'});return}
+        const q=[...Object.keys(nf.quien).filter(x=>nf.quien[x]),nf.otro.trim()].filter(Boolean).join(', ');
+        const n={lugar:nf.lugar,tipo:nf.tipo,crit:nf.crit,text:nf.text.trim(),quien:(q?q+' · ':'')+'Asesor '+asesor,accion:nf.accion.trim(),ev:nf.ev.length,t:now()};
+        this.setState(x=>({novs:{...x.novs,[sh]:[n,...x.novs[sh]]},nf:{lugar:nf.lugar,tipo:null,crit:'Media',text:'',quien:{},otro:'',accion:'',ev:[]},nfErr:''}));this.addLog(`Novedad registrada en ${n.lugar} · ${n.crit.toLowerCase()}`)},
+      k,pctText:k.pct+'%',hasPend:k.pendList.length>0&&!closed,pendList:k.pendList,entrega:s.entrega[sh],setEntrega:e=>{const v=e.target.value;this.setState(x=>({entrega:{...x.entrega,[sh]:v}}))},
+      nextAsesor:nextA,nextMail:nextA.split(' ')[0].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')+'@pvsa.cl',
+      closeBg:k.ready?'#007f80':'#a9b8b8',closeCursor:k.ready?'pointer':'not-allowed',closeLabel:k.ready?'Cerrar turno y enviar reporte':`Faltan ${k.pendList.length} por registrar`,
+      closeShift:()=>{if(!k.ready)return;const t=now();this.setState(x=>({closed:{...x.closed,[sh]:t}}));this.addLog(`Turno cerrado · ${k.pct}% · reporte enviado por correo a 3 destinatarios`)},
+      mailSubject:`Reporte de turno · ${SH[sh].name} 14-10-2026 · ${k.pct}% cumplimiento · ${s.novs[sh].length} novedad(es)`,entregaText:s.entrega[sh]||'sin pendientes.',
+      dlCsv:()=>this.csv(sh),dlPdf:()=>this.pdf(sh),logRows:s.log[sh],
+      // programación
+      progStatus:P.pub?`Publicada ${P.pub}`:'Borrador',progChipBg:P.pub?'#e2f4f4':'#fbf3dc',progChipColor:P.pub?'#005f60':'#7a5d0e',
+      asesores:ASES.map(a=>({label:a,...chip(P.asesor===a),pick:()=>this.setState(x=>({prog:{...x.prog,[sh]:{...x.prog[sh],asesor:a}},pubErr:''}))})),catAreas:areas,
+      mail:{at:mail.at,subject:mail.subject,lines:mail.ops.map(o=>({text:o[0],sug:o[1]?(cur[o[1]]?'✓ en la programación':'→ sugiere agregar actividad'):'sin actividad sugerida',dot:o[1]?(cur[o[1]]?'#00abac':'#e3c77a'):'#6f9493'})),hasUpdate:!!mail.upd,updAt:mail.upd&&mail.upd.at,upd:mail.upd&&mail.upd.text},
+      applyBg:diff?'#00abac':'#4d6e6e',applyLabel:diff?`Aplicar sugerencias (+${diff})`:'Programación al día con el correo',
+      applySug:()=>{if(!diff)return;this.setState(x=>({prog:{...x.prog,[sh]:{...x.prog[sh],ids:{...x.prog[sh].ids,...Object.fromEntries([...sug].map(i=>[i,true]))}}}}));this.addLog(`Sugerencias del correo aplicadas (+${diff})`)},
+      onImport:e=>{const f=e.target.files&&e.target.files[0];if(f)this.addLog(`Planilla importada: ${f.name}`);e.target.value=''},
+      pc:{t:pcount('t'),o:pcount('o'),c:pcount('c'),all:ids.length},pubErr:s.pubErr,publishLabel:P.pub?'Publicar cambios':'Publicar programación',
+      publish:()=>{if(!P.asesor){this.setState({pubErr:'Asigna un asesor de turno.'});return}if(!ids.length){this.setState({pubErr:'No hay actividades programadas.'});return}
+        const t=now();this.setState(x=>({prog:{...x.prog,[sh]:{...x.prog[sh],pub:t}},pubErr:''}));this.addLog(`Programación ${P.pub?'actualizada':'publicada'} · ${ids.length} actividades · notificado ${P.asesor}`)},
+      // reportes
+      repKpis:[{label:'Turnos cerrados',value:String(repAll.length),note:'octubre 2026'},{label:'Cumplimiento promedio',value:avg+'%',note:'ejecutadas / programadas'},{label:'Actividades ejecutadas',value:String(PAST.reduce((a,p)=>a+p.ok,0)+order.filter(x=>s.closed[x]).reduce((a,x)=>a+this.kpi(x).ok,0)),note:'en el mes'},{label:'Novedades',value:String(repAll.reduce((a,r)=>a+r.novs,0)),note:'registradas en el mes'}],
+      motivoBars:Object.entries(motAgg).sort((a,b)=>b[1]-a[1]).map(([label,n])=>({label,n,w:Math.round(n/mMax*100)+'%'})),
+      asesorBars:Object.entries(byA).map(([label,v])=>{const a=Math.round(v.reduce((x,y)=>x+y,0)/v.length);return{label,v:a+'%',w:a+'%',a}}).sort((x,y)=>y.a-x.a),
+      repRows:repAll.map(r=>({fecha:r.fecha,turno:SH[r.sh].name,asesor:r.asesor,pct:r.pct+'%',pctColor:r.pct<75?'#9b3b2e':'#005f60',novs:r.novs,at:'✓ '+r.at,bg:r.live?'#f4faf9':'#fff',
+        csv:()=>r.live?this.csv(r.sh):this.dl(`Programa APR ${SH[r.sh].short} turno ${r.fecha}.csv`,'\ufeffFecha;Turno;Asesor;Programadas;Ejecutadas;No ejecutadas;No ocurrió;Cumplimiento\n'+[r.fecha+'-2026',SH[r.sh].name,r.asesor,r.prog,r.ok,r.no,r.na,r.pct+'%'].join(';'),'text/csv'),
+        pdf:()=>r.live?this.pdf(r.sh):this.dl(`Reporte ${SH[r.sh].short} turno ${r.fecha}.txt`,`Reporte de turno ${SH[r.sh].name} ${r.fecha}-2026\nAsesor: ${r.asesor}\nCumplimiento: ${r.pct}%\nNovedades: ${r.novs}\n`,'text/plain')})),
+      dlAll:()=>this.dl('Consolidado Programa APR octubre 2026.csv','\ufeffFecha;Turno;Asesor;Cumplimiento;Novedades;Enviado\n'+repAll.map(r=>[r.fecha+'-2026',SH[r.sh].name,r.asesor,r.pct+'%',r.novs,r.at].join(';')).join('\n'),'text/csv')
+    };
+  }
+}
+</script>
+</body>
+</html>
